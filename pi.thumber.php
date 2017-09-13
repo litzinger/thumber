@@ -21,6 +21,36 @@ class Thumber
     private $gs_bin = 'gs';
     private $params = array();
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->base = ee()->TMPL->fetch_param('base', '');
+        ee()->load->helper('string');
+
+        if ($this->base == '') {
+            $this->base = $_SERVER['DOCUMENT_ROOT'];
+        }
+
+        // Set the image cache relative link
+        if (ee()->config->item('thumber_cache_dir') !== FALSE) {
+            $this->thumb_cache_rel_dirname = ee()->config->item('thumber_cache_dir');
+        }
+
+        $this->thumb_cache_dirname = reduce_double_slashes($_SERVER['DOCUMENT_ROOT'] . '/' . $this->thumb_cache_rel_dirname);
+
+        // Override the convert bin?
+        if (ee()->config->item('thumber_convert_bin') !== FALSE) {
+            $this->convert_bin = ee()->config->item('thumber_convert_bin');
+        }
+
+        // Override the gs bin?
+        if (ee()->config->item('thumber_gs_bin') !== FALSE) {
+            $this->gs_bin = ee()->config->item('thumber_gs_bin');
+        }
+    }
+
     private function fetch_params()
     {
         /** -------------------------------------
@@ -75,35 +105,6 @@ class Thumber
 
         // this is just for convenience
         $this->params['dimensions'] = $this->params['width'] . 'x' . $this->params['height'];
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->EE =& get_instance();
-        $this->base = ee()->TMPL->fetch_param('base', '');
-        ee()->load->helper('string');
-        if ($this->base == '') {
-            $this->base = $_SERVER['DOCUMENT_ROOT'];
-        }
-
-        // Set the image cache relative link
-        if (ee()->config->item('thumber_cache_dir') !== FALSE) {
-            $this->thumb_cache_rel_dirname = ee()->config->item('thumber_cache_dir');
-        }
-        $this->thumb_cache_dirname = reduce_double_slashes($_SERVER['DOCUMENT_ROOT'] . '/' . $this->thumb_cache_rel_dirname);
-
-        // Override the convert bin?
-        if (ee()->config->item('thumber_convert_bin') !== FALSE) {
-            $this->convert_bin = ee()->config->item('thumber_convert_bin');
-        }
-
-        // Override the gs bin?
-        if (ee()->config->item('thumber_gs_bin') !== FALSE) {
-            $this->gs_bin = ee()->config->item('thumber_gs_bin');
-        }
     }
 
     /**
